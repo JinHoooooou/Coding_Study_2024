@@ -2,6 +2,7 @@ package programmers.level2.쿼드압축_후_개수_세기_0103;
 
 import java.util.Arrays;
 
+// 틀림
 public class QuadCompress {
 	int[] result;
 
