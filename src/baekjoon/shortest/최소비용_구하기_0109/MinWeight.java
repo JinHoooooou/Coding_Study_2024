@@ -1,4 +1,4 @@
-package baekjoon.dijkstra.최소비용_구하기_0109;
+package baekjoon.shortest.최소비용_구하기_0109;
 
 import java.io.*;
 import java.util.*;
@@ -9,6 +9,7 @@ public class MinWeight {
 	private static int vertexCount;
 	private static int edgeCount;
 	private static List<Edge>[] graph;
+	private static List<Edge> edges;
 	private static int source;
 	private static int destination;
 
@@ -16,6 +17,38 @@ public class MinWeight {
 	public static void main(String[] args) throws IOException {
 		parsingInput2();
 
+		int[] minDistanceFromSource;
+//		minDistanceFromSource = dijkstra();
+		minDistanceFromSource = bellmanFord();
+
+		WRITER.write(minDistanceFromSource[destination] + "\n");
+		WRITER.close();
+		READER.close();
+	}
+
+	private static int[] bellmanFord() {
+		int[] distance = new int[vertexCount + 1];
+		Arrays.fill(distance, Integer.MAX_VALUE);
+		distance[source] = 0;
+
+		for (int i = 0; i <= edgeCount; i++) {
+			for (Edge edge : edges) {
+				if (distance[edge.from] == Integer.MAX_VALUE) {
+					continue;
+				}
+				if (distance[edge.to] > distance[edge.from] + edge.weight) {
+					if (i == edgeCount) {
+						return null;
+					}
+					distance[edge.to] = distance[edge.from] + edge.weight;
+				}
+			}
+		}
+
+		return distance;
+	}
+
+	private static int[] dijkstra() {
 		int[] minDistanceFromSource = new int[vertexCount + 1];
 		boolean[] visit = new boolean[vertexCount + 1];
 		for (int i = 1; i <= vertexCount; i++) {
@@ -43,10 +76,7 @@ public class MinWeight {
 				}
 			}
 		}
-
-		WRITER.write(minDistanceFromSource[destination] + "\n");
-		WRITER.close();
-		READER.close();
+		return minDistanceFromSource;
 	}
 
 	private static void parsingInput() throws IOException {
@@ -82,20 +112,22 @@ public class MinWeight {
 						.toArray(int[][]::new);
 		vertexCount = input[0][0];
 		edgeCount = input[1][0];
-		graph = parsingGraph(input);
+		parsingGraph(input);
 		source = input[input.length - 1][0];
 		destination = input[input.length - 1][1];
 	}
 
 	private static List<Edge>[] parsingGraph(int[][] input) {
-		List<Edge>[] result = new List[vertexCount + 1];
+		edges = new ArrayList<>();
+		graph = new List[vertexCount + 1];
 		for (int i = 1; i <= vertexCount; i++) {
-			result[i] = new ArrayList<>();
+			graph[i] = new ArrayList<>();
 		}
 		for (int i = 2; i < edgeCount + 2; i++) {
-			result[input[i][0]].add(new Edge(input[i]));
+			graph[input[i][0]].add(new Edge(input[i]));
+			edges.add(new Edge(input[i]));
 		}
-		return result;
+		return graph;
 	}
 }
 

@@ -1,4 +1,4 @@
-package baekjoon.dijkstra.최단경로_0109;
+package baekjoon.shortest.최단경로_0109;
 
 import java.io.*;
 import java.util.*;

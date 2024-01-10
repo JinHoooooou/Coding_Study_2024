@@ -1,4 +1,4 @@
-package baekjoon.dijkstra.최소비용_구하기_0109;
+package baekjoon.shortest.최소비용_구하기_0109;
 
 
 import org.junit.jupiter.api.AfterEach;
