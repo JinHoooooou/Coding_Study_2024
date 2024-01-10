@@ -12,15 +12,46 @@ public class ShortestPath {
 	private static int edgeCount;
 	private static int source;
 	private static List<Edge>[] graph;
+	private static List<Edge> edges;
 
 	public static void main(String[] args) throws IOException {
 		parseInput();
-		int[] minDistanceFromSource = dijkstra();
+		int[] minDistanceFromSource;
+//		minDistanceFromSource = dijkstra();
+		minDistanceFromSource = bellmanFord();
 		StringBuilder result = makeOutput(minDistanceFromSource);
 
 		WRITER.write(result.toString());
 		WRITER.close();
 		READER.close();
+	}
+
+	private static int[] bellmanFord() {
+		int[] distance = new int[vertexCount + 1];
+		Arrays.fill(distance, Integer.MAX_VALUE);
+		distance[source] = 0;
+
+		for (int i = 0; i < edgeCount; i++) {
+			for (Edge edge : edges) {
+				if (distance[edge.from] == Integer.MAX_VALUE) {
+					continue;
+				}
+				if (distance[edge.to] > distance[edge.from] + edge.weight) {
+					distance[edge.to] = distance[edge.from] + edge.weight;
+				}
+			}
+		}
+
+		for (Edge edge : edges) {
+			if (distance[edge.from] == Integer.MAX_VALUE) {
+				continue;
+			}
+			if (distance[edge.to] > distance[edge.from] + edge.weight) {
+				return null;
+			}
+		}
+
+		return distance;
 	}
 
 	private static void parseInput() throws IOException {
@@ -29,11 +60,12 @@ public class ShortestPath {
 		edgeCount = Integer.parseInt(tokenizer.nextToken());
 		tokenizer = new StringTokenizer(READER.readLine());
 		source = Integer.parseInt(tokenizer.nextToken());
-		graph = parseGraph();
+		parseGraph();
 	}
 
-	private static List<Edge>[] parseGraph() throws IOException {
-		List<Edge>[] graph = new List[vertexCount + 1];
+	private static void parseGraph() throws IOException {
+		graph = new List[vertexCount + 1];
+		edges = new ArrayList<>();
 		for (int i = 1; i <= vertexCount; i++) {
 			graph[i] = new ArrayList<>();
 		}
@@ -43,9 +75,8 @@ public class ShortestPath {
 			int to = Integer.parseInt(tokenizer.nextToken());
 			int weight = Integer.parseInt(tokenizer.nextToken());
 			graph[from].add(new Edge(from, to, weight));
+			edges.add(new Edge(from, to, weight));
 		}
-
-		return graph;
 	}
 
 	private static int[] dijkstra() {
