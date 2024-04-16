@@ -23,7 +23,7 @@
   - 숨바꼭질3 (24-02-27)
 ---
 
-## 유형 정리
+## 유형 정리 (Programmers)
 - Dynamic Programming (DP)
   - 숫자 변환하기 (Level 2)
   - 2 x n 타일링 (Level 2)
